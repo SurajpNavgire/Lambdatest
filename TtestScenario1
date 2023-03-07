@@ -1,0 +1,43 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class TestScenario1 {
+
+    public static void main(String[] args) {
+    	
+       // System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+
+        WebDriver driver = new ChromeDriver();
+
+        driver.get("https://www.lambdatest.com/selenium-playground");
+
+        WebElement simpleFormDemoButton = driver.findElement(By.linkText("Simple Form Demo"));
+        simpleFormDemoButton.click();
+
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("simple-form-demo")) {
+            System.out.println("URL validation successful");
+        } else {
+            System.out.println("URL validation failed");
+        }
+        String message = "Welcome to LambdaTest";
+
+        WebElement messageTextBox = driver.findElement(By.xpath("//input[@id='user-message']"));
+        messageTextBox.sendKeys(message);
+
+        WebElement getCheckedValueButton = driver.findElement(By.id("showInput"));
+        getCheckedValueButton.click();
+
+
+        WebElement messageLabel = driver.findElement(By.xpath("//p[@ id='message']"));
+        String displayedMessage = messageLabel.getText();
+        if (displayedMessage.equals(message)) {
+            System.out.println("Message validation successful");
+        } else {
+            System.out.println("Message validation failed");
+        }
+        driver.quit();
+    }
+}
