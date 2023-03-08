@@ -1,0 +1,41 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+public class DragAndDropSliderTest {
+    private WebDriver driver;
+    private WebElement slider;
+
+    @BeforeClass
+    public void setUp() {
+        System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+        driver = new ChromeDriver();
+        driver.get("https://www.lambdatest.com/selenium-playground");
+        driver.manage().window().maximize();
+    }
+
+    @Test
+    public void testDragAndDropSlider() {
+        driver.findElement(By.linkText("Progress Bars & Sliders")).click();
+
+        driver.findElement(By.linkText("Drag & Drop Sliders")).click();
+
+        slider = driver.findElement(By.id("slider"));
+
+        while (!slider.getAttribute("aria-valuenow").equals("95")) {
+            slider.sendKeys(org.openqa.selenium.Keys.ARROW_RIGHT);
+        }
+
+        Assert.assertEquals(slider.getAttribute("aria-valuenow"), "95");
+    }
+
+    @AfterClass
+    public void tearDown() {
+        driver.quit();
+    }
+}
