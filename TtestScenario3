@@ -1,0 +1,54 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+public class InputFormSubmitTest {
+    private WebDriver driver;
+
+    @BeforeClass
+    public void setUp() {
+        System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+        driver = new ChromeDriver();
+        driver.get("https://www.lambdatest.com/selenium-playground");
+        driver.manage().window().maximize();
+    }
+
+    @Test
+    public void testInputFormSubmit() {
+        driver.findElement(By.linkText("Input Forms")).click();
+
+        driver.findElement(By.linkText("Input Form Submit")).click();
+
+        driver.findElement(By.cssSelector("button[type='submit']")).click();
+
+        WebElement errorMessageElement = driver.findElement(By.cssSelector("div[class='form-error is-visible']"));
+        String errorMessageText = errorMessageElement.getText();
+        Assert.assertEquals(errorMessageText, "Please fill in the fields");
+ driver.findElement(By.cssSelector("input[name='first_name']")).sendKeys("John");
+        driver.findElement(By.cssSelector("input[name='last_name']")).sendKeys("Doe");
+        driver.findElement(By.cssSelector("input[name='email']")).sendKeys("johndoe@example.com");
+        driver.findElement(By.cssSelector("input[name='phone']")).sendKeys("1234567890");
+        driver.findElement(By.cssSelector("input[name='address']")).sendKeys("123 Main St");
+        driver.findElement(By.cssSelector("input[name='city']")).sendKeys("Anytown");
+        driver.findElement(By.cssSelector("input[name='zip']")).sendKeys("12345");
+
+        WebElement countryElement = driver.findElement(By.cssSelector("select[name='state']"));
+        countryElement.sendKeys("United States");
+
+      driver.findElement(By.cssSelector("button[type='submit']")).click();
+
+        WebElement successMessageElement = driver.findElement(By.cssSelector(".contact-form-response > div"));
+        String successMessageText = successMessageElement.getText();
+        Assert.assertEquals(successMessageText, "Thanks for contacting us, we will get back to you shortly.");
+    }
+
+    @AfterClass
+    public void tearDown() {
+        driver.quit();
+    }
+}
