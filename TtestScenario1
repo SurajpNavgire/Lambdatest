@@ -2,42 +2,43 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-public class TestScenario1 {
+public class SimpleFormDemoTest {
+    private WebDriver driver;
 
-    public static void main(String[] args) {
-    	
-       // System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
-
-        WebDriver driver = new ChromeDriver();
-
+    @BeforeClass
+    public void setUp() {
+        System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+        driver = new ChromeDriver();
         driver.get("https://www.lambdatest.com/selenium-playground");
+        driver.manage().window().maximize();
+    }
 
-        WebElement simpleFormDemoButton = driver.findElement(By.linkText("Simple Form Demo"));
-        simpleFormDemoButton.click();
+    @Test
+    public void testSimpleFormDemo() {
+        driver.findElement(By.linkText("Input Forms")).click();
 
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("simple-form-demo")) {
-            System.out.println("URL validation successful");
-        } else {
-            System.out.println("URL validation failed");
-        }
+        driver.findElement(By.linkText("Simple Form Demo")).click();
+
+        Assert.assertTrue(driver.getCurrentUrl().contains("simple-form-demo"));
+
         String message = "Welcome to LambdaTest";
+        WebElement messageBox = driver.findElement(By.xpath("//input[@placeholder='Please enter your Message']"));
+        messageBox.sendKeys(message);
 
-        WebElement messageTextBox = driver.findElement(By.xpath("//input[@id='user-message']"));
-        messageTextBox.sendKeys(message);
+        driver.findElement(By.cssSelector("#get-input > button")).click();
 
-        WebElement getCheckedValueButton = driver.findElement(By.id("showInput"));
-        getCheckedValueButton.click();
+        WebElement yourMessageElement = driver.findElement(By.cssSelector("#user-message > span"));
+        String yourMessageText = yourMessageElement.getText();
+        Assert.assertEquals(yourMessageText, message);
+    }
 
-
-        WebElement messageLabel = driver.findElement(By.xpath("//p[@ id='message']"));
-        String displayedMessage = messageLabel.getText();
-        if (displayedMessage.equals(message)) {
-            System.out.println("Message validation successful");
-        } else {
-            System.out.println("Message validation failed");
-        }
+    @AfterClass
+    public void tearDown() {
         driver.quit();
     }
 }
